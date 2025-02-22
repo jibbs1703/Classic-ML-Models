@@ -9,3 +9,5 @@ CATEGORICAL_COLUMNS = [
 RAW_BUCKET_NAME = "jibbs-raw-datasets"
 CLEAN_BUCKET_NAME = "jibbs-cleaned-datasets"
 RAW_FILE_NAME = "uncleaned_AdultData.csv"
+ARTIFACT_FOLDER = "artifacts/"
+MODEL_NAME = "adult_income_xgb"

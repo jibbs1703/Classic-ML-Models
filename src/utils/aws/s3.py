@@ -1,8 +1,10 @@
 import logging
 import os
+import tempfile
 from io import StringIO
 
 import boto3
+import joblib
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 
@@ -220,3 +222,31 @@ class S3Buckets:
         except Exception as e:
             logging.exception(f"Unexpected error deleting file: {e}")
             return f"Error: Unexpected error occurred while deleting the file '{file_name}' from the bucket '{bucket_name}'."
+        
+    def save_model_to_s3(self, model, bucket_name, folder, model_name):
+        """
+        This method uploads a model to an S3 bucket in the user's AWS account.
+
+        :param bucket_name: S3 Bucket to upload model to.
+        :param model_name: name for model in S3 Bucket.
+        :return: Message if model is successfully uploaded.
+        """
+        with tempfile.TemporaryFile() as fp:
+            joblib.dump(model, fp)
+            fp.seek(0)
+            self.client.put_object(Body=fp.read(), Bucket=bucket_name, Key=f"{folder}{model_name}")
+            logging.info(f"The model {model_name} has been uploaded to the S3 bucket {bucket_name}")
+
+    def load_model_from_s3(self, bucket_name, folder, model_name):
+        """
+        This method downloads a file from an S3 bucket in the user's AWS account.
+
+        :param bucket_name: Bucket to download saved model from
+        :param model_name: model to download from S3 Bucket
+        :return: Loaded Model
+        """
+        with tempfile.TemporaryFile() as fp:
+            self.client.download_fileobj(Fileobj=fp, Bucket=bucket_name, Key=f"{folder}{model_name}")
+            fp.seek(0)
+            model = joblib.load(fp)
+            return model

@@ -5,7 +5,7 @@ import pandas as pd
 from utils.aws.s3 import S3Buckets
 
 
-def load_datasets(bucket_name: str, df: pd.DataFrame, filename: str) -> None:
+def load_dataset(bucket_name: str, df: pd.DataFrame, filename: str) -> None:
     """
     Uploads pandas DataFrame to S3 as a CSV file.
 
