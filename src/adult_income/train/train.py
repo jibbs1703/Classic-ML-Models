@@ -1,13 +1,6 @@
-"""Main module for the adult income classification project."""
+"""Module for the adult income model training."""
+import numpy as np
 import pandas as pd
-from sklearn.metrics import (
-    accuracy_score,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
 from xgboost import XGBClassifier
 
 from utils.aws.s3 import S3Buckets
@@ -16,17 +9,18 @@ from utils.aws.s3 import S3Buckets
 def train_model(features: pd.DataFrame, target: pd.Series,
                 bucket_name: str,filename: str,
                 folder: str) -> XGBClassifier:
-    """_summary_
+    """
+    Train a model using the XGBoost Classifier.
 
     Args:
-        features (pd.DataFrame): _description_
-        target (pd.Series): _description_
-        bucket_name (str): _description_
-        filename (str): _description_
-        folder (str): _description_
+        features (pd.DataFrame): The features to train the model on.
+        target (pd.Series): The target variable.
+        bucket_name (str): The name of the S3 bucket to store the model.
+        filename (str): The name of the model file.
+        folder (str): The folder to store the model in the S3 bucket.
 
     Returns:
-        XGBClassifier: _description_
+        XGBClassifier: The trained model.
     """
     s3_connection = S3Buckets.credentials()
     model = XGBClassifier(colsample_bytree=0.7,learning_rate=0.1,
@@ -40,37 +34,31 @@ def train_model(features: pd.DataFrame, target: pd.Series,
     return model
 
 
-def validate_model(features:pd.DataFrame, target:pd.Series,
-                   model:XGBClassifier) -> None:
-    """_summary_
+def validation_predictions(features:pd.DataFrame,
+                   model:XGBClassifier) -> np.ndarray:
+    """Generate predictions on validation data using a trained XGBoost classifier.
 
     Args:
-        features (pd.DataFrame): _description_
-        target (pd.Series): _description_
-        model (XGBClassifier): _description_
+        features (pd.DataFrame): Input features for the validation set, where each column
+            represents a feature and each row is a sample.
+        model (XGBClassifier): Trained XGBoost classifier used to make predictions.
+
+    Returns:
+        np.ndarray: Array of predicted class labels for the validation set.
     """
-    predictions = model.predict(features)
-    print("Model Accuracy:", accuracy_score(target, predictions))
-    print("Precision:", precision_score(target, predictions))
-    print("Recall:", recall_score(target, predictions))
-    print("F1 Score:", f1_score(target, predictions))
-    print("ROC-AUC:", roc_auc_score(target, predictions))
-    print("Confusion Matrix:\n", confusion_matrix(target, predictions))
+    return model.predict(features)
 
 
-def test_model(features:pd.DataFrame, target:pd.Series,
-                   model:XGBClassifier) -> None:
-    """_summary_
+def test_predictions(features:pd.DataFrame,
+                   model:XGBClassifier) -> np.ndarray:
+    """Generate predictions on test data using a trained XGBoost classifier.
 
     Args:
-        features (pd.DataFrame): _description_
-        target (pd.Series): _description_
-        model (XGBClassifier): _description_
+        features (pd.DataFrame): Input features for the validation set, where each column
+            represents a feature and each row is a sample.
+        model (XGBClassifier): Trained XGBoost classifier used to make predictions.
+
+    Returns:
+        np.ndarray: Array of predicted class labels for the validation set.
     """
-    predictions = model.predict(features)
-    print("Model Accuracy:", accuracy_score(target, predictions))
-    print("Precision:", precision_score(target, predictions))
-    print("Recall:", recall_score(target, predictions))
-    print("F1 Score:", f1_score(target, predictions))
-    print("ROC-AUC:", roc_auc_score(target, predictions))
-    print("Confusion Matrix:\n", confusion_matrix(target, predictions))
+    return model.predict(features)

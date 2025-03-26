@@ -1,9 +1,12 @@
 """Main module for the adult income classification project."""
+from pprint import pprint
+
 from adult_income import config
 from adult_income.etl.extract import run_data_extraction
 from adult_income.etl.load import load_dataset
 from adult_income.etl.transform import Preprocess
-from adult_income.train.train import test_model, train_model, validate_model
+from adult_income.evaluate.evaluate import evaluate_results
+from adult_income.train.train import test_predictions, train_model, validation_predictions
 from utils.helpers.etl_helpers import resample_training, train_test_val_split
 
 if __name__ == "__main__":
@@ -31,5 +34,11 @@ if __name__ == "__main__":
                               filename=config.MODEL_NAME,
                               folder=config.ARTIFACT_FOLDER)
     
-    test_model(features=X_test, target=y_test, model=model)
-    validate_model(features=X_val, target=y_val, model= model)
+    validation_results = validation_predictions(features=X_val, model=model)
+    test_results = test_predictions(features=X_test, model=model)
+    
+    validation_metrics = evaluate_results(y_val, validation_results)
+    test_metrics = evaluate_results(y_test, test_results)
+
+    pprint(f"Validation Metrics: {validation_metrics}")
+    pprint(f"Test Metrics: {test_metrics}")

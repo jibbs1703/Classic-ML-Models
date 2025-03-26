@@ -1,0 +1,10 @@
+fastapi==0.115.11
+Jinja2==3.1.5
+pre_commit==4.2.0
+pydantic==2.10.6
+pytest==8.3.5
+python-dotenv==1.0.1
+requests==2.32.3
+ruff==0.11.0
+sqlfluff==3.3.1
+uvicorn==0.34.0
