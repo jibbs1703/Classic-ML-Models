@@ -8,3 +8,4 @@ requests==2.32.3
 ruff==0.11.0
 sqlfluff==3.3.1
 uvicorn==0.34.0
+xgboost==3.0.0
