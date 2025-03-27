@@ -246,7 +246,8 @@ class S3Buckets:
         :return: Loaded Model
         """
         with tempfile.TemporaryFile() as fp:
-            self.client.download_fileobj(Fileobj=fp, Bucket=bucket_name, Key=f"{folder}{model_name}")
+            self.client.download_fileobj(Fileobj=fp, Bucket=bucket_name,
+                                         Key=f"{folder}{model_name}")
             fp.seek(0)
             model = joblib.load(fp)
             return model
