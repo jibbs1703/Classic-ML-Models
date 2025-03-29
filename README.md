@@ -15,3 +15,11 @@ The model development process is tracked using MLflow, allowing for transformer 
 
 * Description: Classifies the earnings of individuals into two classes - above $50k or below $50k.  
 * Includes: Data preprocessing, model selection,hyperparameter tuning, model evaluation metrics (accuracy, precision, recall, F1-score).
+
+```bash
+docker build -t classic-ml-models-dev .
+```
+
+```bash
+docker run -it --name classic-ml-models-container -v .:/workspace -p 8888:8888 classic-ml-models-dev
+```
