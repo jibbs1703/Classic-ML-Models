@@ -4,16 +4,20 @@ This project builds a machine learning model to classify adult income levels (e.
 
 ## Data Processing and Preparation
 
-The data processing pipeline prepares the Adult Income dataset (e.g., from the UCI repository) for training machine learning models. The steps are as follows:
+The data processing pipeline prepares the Adult Income dataset for training machine learning models. The steps are as follows:
 
 - **Data Extraction**: Raw data is extracted from a source (e.g., CSV file or database).
+
 - **Preprocessing**: 
-  - Categorical features are encoded (e.g., using one-hot or label encoding).
-  - Numerical features are scaled (e.g., using StandardScaler).
-  - Missing values are handled (e.g., imputation or removal).
+  - Categorical features are encoded
+  - Numerical features are scaled
+  - Missing values are handled 
+
 - **Splitting**: The dataset is divided into training (70%), validation (15%), and testing (15%) sets.
-- **Resampling**: Techniques like SMOTE or undersampling are applied to address class imbalance in the target variable (income).
-- **Storage**: Processed datasets are uploaded to an S3 bucket (`CLEAN_BUCKET_NAME`) for use in training and deployment.
+
+- **Resampling**: Oversampling is applied to address class imbalance in the target variable (income)
+
+- **Storage**: Processed datasets are uploaded to an S3 bucket for use in training and deployment.
 
 These steps ensure the data is clean, balanced, and ready for model training.
 
@@ -22,13 +26,15 @@ These steps ensure the data is clean, balanced, and ready for model training.
 The model training process involves experimenting with multiple algorithms, selecting the best performer, and tuning its parameters. Key aspects include:
 
 - **Experimentation**: Three models were evaluated in an experiments notebook mimicking MLflow-style logging:
+
   - **Logistic Regression**: A baseline linear model for binary classification.
   - **Random Forest**: An ensemble model to capture non-linear relationships.
   - **XGBoost**: A gradient boosting model for high performance and scalability.
-- **Parameter Tuning**: Hyperparameters for each model were tested using grid search or random search in the experiments notebook. Results (e.g., accuracy, F1-score) and parameters were logged in the `experiments/` folder.
-- **Model Selection**: XGBoost was chosen as the final model due to its superior performance (e.g., highest F1-score and robustness to overfitting).
-- **Training**: The XGBoost model was trained on the preprocessed training set with optimized parameters (e.g., `max_depth`, `learning_rate`, `n_estimators`).
-- **Threshold Determination**: A probability threshold (e.g., 0.5) was selected to classify predictions into ≤50K or >50K categories, optimized based on validation set performance.
+
+- **Parameter Tuning**: Hyperparameters for each model were tested using grid search in the experiments notebook. Results and parameters were logged in the `experiments` folder.
+
+- **Model Selection**: XGBoost was chosen as the final model das it scored the highest F1-score.
+
 
 The trained model, scaler, and encoder are saved as artifacts (e.g., `model.json`, `scaler.joblib`, `encoder.joblib`) and uploaded to S3.
 
@@ -37,9 +43,13 @@ The trained model, scaler, and encoder are saved as artifacts (e.g., `model.json
 The XGBoost model was evaluated on the test set to assess its performance. Key metrics include:
 
 - **Accuracy**: Proportion of correct predictions.
+
 - **Precision**: Ratio of true positives to predicted positives.
+
 - **Recall**: Ratio of true positives to actual positives.
+
 - **F1-Score**: Harmonic mean of precision and recall, prioritizing balanced performance.
+
 - **ROC-AUC**: Area under the Receiver Operating Characteristic curve, measuring discrimination ability.
 
 Evaluation results were logged and visualized (e.g., confusion matrix, ROC curve) in the experiments notebook. The model demonstrated strong predictive power, particularly after addressing class imbalance and tuning.
